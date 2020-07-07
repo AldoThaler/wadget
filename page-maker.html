@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Wadget | Page Maker</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="css/styles.css" />
+	<link rel="icon" href="favicon.png" type="image/x-icon" />
+</head>
+<body>
+	<div id="dialog">
+		<div>
+			<img src="img/close.svg" id="dialog-close" class="close" />
+			<h2 class="small">Zack, fertig!</h2>
+			<textarea id="output" class="large"></textarea>
+			<a href="#" id="copy" class="small"><img src="img/clipboard.svg" height="20" />Kopieren</a>
+		</div>
+	</div>
+	<div id="wrapper">
+		<div id="header"><a href="/wadget/"><span>W</span><span>adget</span><span>Page Maker</span></a></div>
+		<div class="form">
+			<div class="section">
+				<span>Wort</span>
+				<div><input type="text" id="word" /></div>
+			</div>
+			<div class="section">
+				<span>Wortart</span>
+				<div>
+					<div class="radio inline">
+						<input type="radio" name="type" id="type-noun" value="noun" checked />
+						<div>Substantiv</div>
+					</div><div class="radio inline">
+						<input type="radio" name="type" id="type-verb" value="verb" />
+						<div>Verb</div>
+					</div><div class="radio inline">
+						<input type="radio" name="type" id="type-adj" value="adj" />
+						<div>Adjektiv</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<hr />
+		
+		<div class="form">
+			<div class="section">
+				<span>Worttrennung</span>
+				<div>
+					<div id="hyph-noun" class="split">
+						<div>
+							<div class="section">
+								<input type="text" id="hyph-sg" placeholder="Singular" />
+							</div>
+						</div>
+						<div>
+							<div class="section">
+								<input type="text" id="hyph-pl" placeholder="Plural" />
+							</div>
+						</div>
+					</div>
+					<div id="hyph-verb" class="split hidden">
+						<div>
+							<div class="section">
+								<input type="text" id="hyph-inf" placeholder="Infinitiv" />
+							</div>
+						</div>
+						<div>
+							<div class="section">
+								<input type="text" id="hyph-preterite" placeholder="Präteritum" />
+							</div>
+						</div>
+						<div>
+							<div class="section">
+								<input type="text" id="hyph-pp" placeholder="Partizip II" />
+							</div>
+						</div>
+					</div>
+					<div id="hyph-adj" class="split hidden">
+						<div>
+							<div class="section">
+								<input type="text" id="hyph-pos" placeholder="Positiv" />
+							</div>
+						</div>
+						<div>
+							<div class="section">
+								<input type="text" id="hyph-comp" placeholder="Komparativ" />
+							</div>
+						</div>
+						<div>
+							<div class="section">
+								<input type="text" id="hyph-sup" placeholder="Superlativ" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="section">
+				<span>IPA</span>
+				<div><input type="text" id="ipa" /></div>
+			</div>
+		</div>
+		
+		<hr />
+		
+		<div class="form">
+			<div id="gender" class="section">
+				<span>Genus</span>
+				<div>
+					<div class="check inline">
+						<input type="checkbox" name="gender" id="gender-m" value="m" checked />
+						<div>männlich</div>
+					</div><div class="check inline">
+						<input type="checkbox" name="gender" id="gender-f" value="f" />
+						<div>weiblich</div>
+					</div><div class="check inline">
+						<input type="checkbox" name="gender" id="gender-n" value="n" />
+						<div>sächlich</div>
+					</div>
+				</div>
+			</div>
+			<div id="declension" class="section">
+				<span>Deklination</span>
+				<div class="split">
+					<div>
+						<div class="section">
+							<input type="text" id="nom-sg" placeholder="Nom. Sg." />
+						</div>
+						<div class="section">
+							<input type="text" id="gen-sg" placeholder="Gen. Sg." />
+						</div>
+						<div class="section">
+							<input type="text" id="dat-sg" placeholder="Dat. Sg." />
+						</div>
+						<div class="section">
+							<input type="text" id="acc-sg" placeholder="Akk. Sg." />
+						</div>
+					</div>
+					<div>
+						<div class="section">
+							<input type="text" id="nom-pl" placeholder="Nom. Pl." />
+						</div>
+						<div class="section">
+							<input type="text" id="gen-pl" placeholder="Gen. Pl." />
+						</div>
+						<div class="section">
+							<input type="text" id="dat-pl" placeholder="Dat. Pl." />
+						</div>
+						<div class="section">
+							<input type="text" id="acc-pl" placeholder="Akk. Pl." />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="conjugation" class="section hidden">
+				<span>Conjugation</span>
+				<div class="split">
+					<div>
+						<div class="section">
+							<input type="text" id="first-sg" placeholder="1. Sg." />
+						</div>
+						<div class="section">
+							<input type="text" id="second-sg" placeholder="2. Sg." />
+						</div>
+						<div class="section">
+							<input type="text" id="third-sg" placeholder="3. Sg." />
+						</div>
+						<div class="section">
+							<input type="text" id="preterite" placeholder="Präteritum (ich)" />
+						</div>
+						<div class="section">
+							<input type="text" id="subj" placeholder="Konjunktiv II (ich)" />
+						</div>
+					</div>
+					<div>
+						<div class="section">
+							<input type="text" id="imp-sg" placeholder="Imperativ Sg." />
+						</div>
+						<div class="section">
+							<input type="text" id="imp-pl" placeholder="Imperativ Pl." />
+						</div>
+						<div class="section">
+							<input type="text" id="pp" placeholder="Partizip II" />
+						</div>
+						<div class="section">
+							<input type="text" id="aux-verb" placeholder="Hilfsverb" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="degree" class="section hidden">
+				<span>Degree</span>
+				<div class="split">
+					<div>
+						<div class="section">
+							<div><input type="text" id="pos" placeholder="Positiv" /></div>
+						</div>
+					</div>
+					<div>
+						<div class="section">
+							<div><input type="text" id="comp" placeholder="Komparativ" /></div>
+						</div>
+					</div>
+					<div>
+						<div class="section">
+							<div><input type="text" id="sup" placeholder="Superlativ" /></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<hr />
+		
+		<div class="form">
+			<div class="section">
+				<span>Definition</span>
+				<div>
+					<textarea id="definition">:[1] </textarea>
+				</div>
+			</div>
+			<div class="section">
+				<span>Herkunft</span>
+				<div>
+					<textarea id="etymology">:[[Determinativkompositum]] aus ''[[xxx]]'' und ''[[xxx]]''</textarea>
+				</div>
+			</div>
+			<div class="section">
+				<span>Synonyme</span>
+				<div>
+					<textarea id="synonyms">:[1] </textarea>
+				</div>
+			</div>
+			<div class="section">
+				<span>Beispiele</span>
+				<div>
+					<textarea id="examples" class="large">:[1] </textarea>
+				</div>
+			</div>
+		</div>
+		
+		<hr />
+		
+		<div class="form">
+			<div class="section">
+				<span>Referenzen</span>
+				<div>
+					<textarea id="references" class="large">:[1] {{Wikipedia}}
+:[*] {{Wikipedia-Suche}}
+:[1] {{Ref-DWDS}} (Korpusbelege)
+:[*] {{Ref-OWID}}
+:[*] {{Ref-UniLeipzig}} (Korpusbelege)
+:[1] {{Ref-FreeDictionary}}
+:[1] {{Ref-Duden}}</textarea>
+					<a href="#" target="_blank" id="view-refs" class="ref small">
+						<img src="img/link.svg" height="15" />Alle öffnen
+					</a>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<p class="note"><b>Hinweis</b> — Mit Betätigung des unten stehenden Buttons stimmt der Anwender dieser Applikation zu, dass er den generierten Eintrag vor der Veröffentlichung mit höchster Sorgfalt überprüfen und gegebenenfalls ergänzen wird, um etwaige Fehler und Mängel im Eintrag möglichst zu vermeiden.</p>
+		<button type="button" id="generate"><img src="img/go.svg" height="10" /><span>Eintrag generieren</span></button>
+	</div>
+	<script src="js/general.js"></script>
+	<script src="js/page-maker.js"></script>
+</body>
+</html>

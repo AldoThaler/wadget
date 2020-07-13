@@ -79,6 +79,37 @@ document.getElementById("copy").addEventListener("click", function() {
 	document.execCommand("copy");
 });
 
+// auto-convert hyphens
+Array.prototype.forEach.call(
+	document.getElementsByClassName("hyph"),
+	function(element) {
+		element.addEventListener("keyup", function(e) {
+			element.value = element.value.replace(/[-.,]/g, "·");
+		});
+	}
+);
+
+// insert IPA into textbox
+document.querySelectorAll("#insert-ipa a").forEach(function(element) {
+	element.addEventListener("click", function() {
+		var textbox = element.parentNode.parentNode
+			.querySelector("input[type='text']");
+		var start = textbox.selectionStart;
+		var end = textbox.selectionEnd;
+		var insert = element.textContent;
+		
+		textbox.value =
+			textbox.value.slice(0, start) +
+			insert +
+			textbox.value.slice(end);
+		
+		var pos = start + insert.length;
+		textbox.selectionStart = pos;
+		textbox.selectionEnd = pos;
+		textbox.focus();
+	});
+});
+
 // generate article
 document.getElementById("generate").addEventListener("click", function() {
 	function getValue(id) {
@@ -104,7 +135,7 @@ document.getElementById("generate").addEventListener("click", function() {
 			}
 			return code;
 		} else {
-			data = data.split(",");
+			data = data.split(/[,;]/);
 			var code = "";
 			for(let i = 0; i < data.length; i++) {
 				code +=
@@ -118,8 +149,12 @@ document.getElementById("generate").addEventListener("click", function() {
 	var word = getValue("word");
 	if(!word) { return false; }
 	var type = document.querySelector("input[name='type']:checked").value;
-	var ipa = getValue("ipa");
 	var references = getValue("references");
+	
+	var ipa = getValue("ipa").split(/[,;]/)
+		.map(function(i) {
+			return "{{Lautschrift|" + i.trim() + "}}";
+		}).join(", ");
 	
 	var typeHead;
 	if(type === "noun") {
@@ -246,7 +281,7 @@ document.getElementById("generate").addEventListener("click", function() {
 		"{{Worttrennung}}\n" +
 		":" + hyphenation + "\n\n" +
 		"{{Aussprache}}\n" +
-		":{{IPA}} {{Lautschrift|" + ipa + "}}\n" +
+		":{{IPA}} " + ipa + "\n" +
 		":{{Hörbeispiele}} {{Audio|}}\n\n" +
 		"{{Bedeutungen}}\n" + definition + "\n\n" +
 		(etymology ? "{{Herkunft}}\n" + etymology + "\n\n" : "") +

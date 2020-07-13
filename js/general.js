@@ -1,21 +1,27 @@
 (function() {
 	"use strict";
 
-	// prepare radio buttons
-	document.querySelectorAll(".check, .radio").forEach(function(element) {
-		var id = element.querySelector("input").getAttribute("id");
-		var target = element.querySelector("div");
-		var label = target.innerHTML;
-		target.outerHTML =
-			"<label for='" + id + "'>" +
-				"<div class='button'>" +
-					"<span class='box'></span>" +
-					"<span class='mark'></span>" +
-					"<span class='ripple'></span>" +
-				"</div>" +
-				label +
-			"</label>";
-	});
+	// prepare check & radio & toggle buttons
+	document.querySelectorAll(".check, .radio, .toggle")
+		.forEach(function(element) {
+			var id = element.querySelector("input").getAttribute("id");
+			var target = element.querySelector("div");
+			var label = target.innerHTML;
+			target.outerHTML =
+				"<label for='" + id + "'>" +
+					"<div class='button'>" +
+						(element.classList.contains("toggle") ?
+							"<span class='bar'></span>" +
+							"<span class='knob'></span>" :
+							"<span class='box'></span>" +
+							"<span class='mark'></span>" +
+							"<span class='ripple'></span>"
+						) +
+					"</div>" +
+					label +
+				"</label>";
+		}
+	);
 
 	// convert images to inline SVGs
 	var svgCount = 0;
@@ -59,13 +65,6 @@
 	document.querySelectorAll("input[type='text'], textarea")
 		.forEach(function(element) {
 			element.spellcheck = false;
-		}
-	);
-	
-	// link opens in a new tab tooltip
-	document.querySelectorAll("a[target='_blank']")
-		.forEach(function(element) {
-			element.title = "Link wird in einem neuen Tab geöffnet";
 		}
 	);
 })();

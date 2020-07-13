@@ -4,12 +4,6 @@
 	padding: 0;
 }
 
-/* --- IMPORT FONT --- */
-@font-face {
-	src: url("Roboto.ttf");
-	font-family: Roboto;
-}
-
 /* --- CONTENT SELECTION --- */
 ::-moz-selection {
 	background-color: rgba(90, 90, 90, 0.1);
@@ -42,10 +36,14 @@ body {
 
 /* --- GENERAL --- */
 hr {
-	margin: 35px auto;
+	margin: 30px auto;
 	width: 30%;
 	border: 0;
 	border-bottom: 1px solid #E5E5E5;
+}
+
+hr.large {
+	margin: 50px auto;
 }
 
 a {
@@ -53,6 +51,7 @@ a {
 	text-decoration: none;
 	border-bottom: 1px solid #BBBBBB;
 	transition: border-bottom-color 200ms;
+	cursor: pointer;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
@@ -120,11 +119,6 @@ h2 {
 	user-select: none;
 }
 
-h2.small {
-	margin-bottom: 15px;
-	font-size: 30px;
-}
-
 .brand {
 	font-family: Georgia, serif;
 	text-shadow: 1px 1px #CCCCCC;
@@ -164,15 +158,15 @@ h2.small {
 	text-shadow: 1px 1px #CCCCCC;
 }
 
-.note {
-	text-align: center;
+.button-label {
+	margin-top: 15px;
 	font-size: 13px;
 	color: #BBBBBB;
 }
 
 /* --- HEADER --- */
 #header {
-	margin-bottom: 30px;
+	margin-bottom: 50px;
 	padding-bottom: 20px;
 	border-bottom: 1px solid #E2E2E2;
 	border-radius: 50%;
@@ -226,6 +220,8 @@ input[type="text"], textarea {
 	font-family: Consolas, monospace;
 	outline: none;
 	transition: border-color 100ms, box-shadow 200ms;
+	-webkit-appearance: none;
+	appearance: none;
 }
 
 textarea {
@@ -242,7 +238,6 @@ textarea.large {
 
 #output {
 	height: 450px;
-	word-break: break-all;
 }
 
 input[type="text"].block {
@@ -298,33 +293,38 @@ button span {
 	vertical-align: middle;
 }
 
-/* --- CHECKBOXES & RADIO BUTTONS --- */
-.check, .radio {
+/* --- CHECKBOX & RADIO & TOGGLE --- */
+.check, .radio, .toggle {
 	display: block;
-	margin: 6px 0;
+	margin: 15px 0;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
 }
 
-.check.inline, .radio.inline {
+.check.inline,
+.radio.inline,
+.toggle.inline {
 	display: inline-block;
 	margin-right: 20px;
 }
 
-.check label, .radio label {
+.check label, .radio label, .toggle label {
 	font-size: 16px;
 	cursor: pointer;
 }
 
 .check input[type="checkbox"],
-.radio input[type="radio"] {
+.radio input[type="radio"],
+.toggle input[type="checkbox"] {
 	position: absolute;
 	opacity: 0;
 }
 
-.check .button, .radio .button {
+.check .button,
+.radio .button,
+.toggle .button {
 	position: relative;
 	margin-right: 15px;
 	display: inline-block;
@@ -416,12 +416,57 @@ button span {
 	vertical-align: middle;
 }
 
+.toggle {
+	display: inline-block;
+	position: relative;
+	margin-right: 15px;
+	cursor: pointer;
+}
+
+.toggle .button {
+	width: 50px;
+}
+
+.toggle .button .bar {
+	display: block;
+	position: absolute;
+	opacity: 0.5;
+	background-color: #BBBBBB;
+	height: 18px;
+	width: 44px;
+	border-radius: 16px;
+	transition: background-color 0.2s ease-in-out;
+	top: 3px;
+	left: 3px;
+}
+
+.toggle .button .knob {
+	display: block;
+	position: relative;
+	background-color: #FFFFFF;
+	height: 24px;
+	width: 24px;
+	border-radius: 50%;
+	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+	z-index: 1;
+	transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.toggle input:checked ~ label .bar {
+	background-color: #222222;
+}
+
+.toggle input:checked ~ label .knob {
+	background-color: #222222;
+	transform: translate3d(26px, 0, 0);
+}
+
 /* --- DIALOGS --- */
 #dialog {
 	position: fixed;
 	top: 0;
 	left: 0;
-	z-index: 2;
+	z-index: 1;
 	display: none;
 	justify-content: center;
 	align-items: center;
@@ -433,15 +478,17 @@ button span {
 
 #dialog > div {
 	position: relative;
-	overflow: visible;
+	max-width: calc(100% - 30px);
+	max-height: calc(100% - 65px);
+}
+
+#dialog > div > div {
+	height: 100%;
+	overflow: auto;
 	background-color: #FFFFFF;
 	border-radius: 30px;
 	box-sizing: border-box;
-	min-width: 320px;
-	min-height: 64px;
-	max-width: 90%;
-	max-height: 90%;
-	padding: 32px;
+	padding: 40px;
 }
 
 #dialog-close {
@@ -496,10 +543,19 @@ button span {
 	100% { transform: scale(1); }
 }
 
+#dialog h2 {
+	margin-bottom: 14px;
+	font-size: 30px;
+}
+
+#dialog p {
+	margin-bottom: 20px;
+	font-size: 15px;
+}
+
 /* --- FORM --- */
 .form {
 	display: table;
-	table-layout: fixed;
 	width: 100%;
 }
 
@@ -516,6 +572,7 @@ button span {
 	padding-right: 30px;
 	vertical-align: middle;
 	text-align: right;
+	white-space: nowrap;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
@@ -538,6 +595,41 @@ button span {
 
 .form .split > div:last-child {
 	margin-right: 0;
+}
+
+/* --- IPA FIELD --- */
+#ipa {
+	margin-bottom: 0;
+	border-radius: 10px 10px 0 0;
+}
+
+#insert-ipa {
+	position: relative;
+	margin-top: 0;
+	padding: 10px;
+	border: 1px solid #D5D5D5;
+	border-top: 0;
+	border-radius: 0 0 10px 10px;
+}
+
+#insert-ipa a {
+	display: inline-block;
+	min-width: 25px;
+	border-bottom: none;
+	text-align: center;
+	font-size: 14px;
+	color: #BBBBBB;
+	line-height: 22px;
+	font-size: 16px;
+	transition: color 200ms;
+}
+
+#insert-ipa a:hover {
+	color: inherit;
+}
+
+#insert-ipa a.fix {
+	font-family: "Lucida Sans Unicode", sans-serif;
 }
 
 /* --- STEP BY STEP INSTRUCTIONS --- */
@@ -574,38 +666,116 @@ button span {
 	padding-bottom: 10px;
 }
 
+/* --- TOOLTIPS --- */
+.tooltip {
+	position: relative;
+	display: inline;
+}
+
+.tooltip a {
+	margin-left: 5px;
+	padding: 0 5px;
+	color: #BBBBBB;
+	border-bottom: 0;
+	transition: color 200ms;
+}
+
+.tooltip a:hover {
+	color: #222222;
+}
+
+.tooltip a:hover + div {
+	left: calc(100% + 30px);
+	opacity: 1;
+}
+
+.tooltip div {
+	position: absolute;
+	z-index: 1;
+	top: -15px;
+	left: calc(100% + 35px);
+	width: 50vw;
+	max-width: 500px;
+	opacity: 0;
+	box-sizing: border-box;
+	padding: 10px 15px;
+	background-color: rgba(0, 0, 0, 0.75);
+	color: #FFFFFF;
+	border-radius: 10px;
+	text-align: left;
+	white-space: normal;
+	transition: opacity 200ms, top 200ms, left 200ms;
+	pointer-events: none;
+}
+
+.tooltip div::before {
+	content: "";
+	position: absolute;
+	top: 18px;
+	left: -10px;
+	border-top: 8px solid transparent;
+	border-right: 10px solid rgba(0, 0, 0, 0.75);
+	border-bottom: 8px solid transparent;
+	border-left: none;
+}
+
 /* --- RESPONSIVE --- */
-@media (min-width: 800px) {
+@media (min-width: 1401px) {
+	#wrapper { width: 50%; }
+	#dialog > div { width: 35%; }
+}
+
+@media (max-width: 1400px) {
+	#wrapper { width: 60%; }
+	#dialog > div { width: 45%; }
+}
+
+@media (max-width: 1150px) {
 	#wrapper { width: 80%; }
 	#dialog > div { width: 60%; }
 }
 
-@media (min-width: 1050px) {
-	#wrapper { width: 65%; }
-	#dialog > div { width: 50%; }
-}
-
-@media (min-width: 1300px) {
-	#wrapper { width: 55%; }
-	#dialog > div { width: 40%; }
-}
-
-@media (min-width: 1600px) {
-	#wrapper { width: 45%; }
-	#dialog > div { width: 35%; }
-}
-
-@media (max-width: 799px) {
+@media (max-width: 850px) {
 	#wrapper { width: 100%; }
 	#dialog > div { width: 80%; }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 750px) {
 	.form, .form > .section { display: block; }
 	.form > .section > span { text-align: left; }
 	.form .split { display: block; }
+	.form .split > div { margin-right: 0; }
+	
+	.tooltip div {
+		top: 45px;
+		left: -7px;
+	}
+
+	.tooltip div::before {
+		content: "";
+		position: absolute;
+		top: -10px;
+		left: 15px;
+		border-top: none;
+		border-right: 8px solid transparent;
+		border-bottom: 10px solid rgba(0, 0, 0, 0.75);
+		border-left: 8px solid transparent;
+	}
+	
+	.tooltip a:hover + div {
+		top: 40px;
+		left: -7px;
+	}
 }
 
 @media (max-width: 500px) {
-	#dialog > div { width: calc(100% - 20px); }
+	#dialog {
+		align-items: flex-end;
+	}
+	
+	#dialog > div {
+		margin-bottom: 15px;
+		width: 100%;
+		height: 100%;
+	}
 }

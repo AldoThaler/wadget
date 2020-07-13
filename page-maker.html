@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Wadget | Page Maker</title>
+	<title>Page Maker · Wadget</title>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="stylesheet" type="text/css" href="css/styles.css" />
@@ -11,9 +11,12 @@
 	<div id="dialog">
 		<div>
 			<img src="img/close.svg" id="dialog-close" class="close" />
-			<h2 class="small">Zack, fertig!</h2>
-			<textarea id="output" class="large"></textarea>
-			<a href="#" id="copy" class="small"><img src="img/clipboard.svg" height="20" />Kopieren</a>
+			<div>
+				<h2 class="small">Zack, fertig!</h2>
+				<p>Vergiss bitte nicht, den generierten Eintrag vor der Veröffentlichung noch einmal sorgfältig zu überprüfen und gegebenenfalls zu ergänzen!</p>
+				<textarea id="output" class="large"></textarea>
+				<a id="copy" class="small"><img src="img/clipboard.svg" height="18" />Kopieren</a>
+			</div>
 		</div>
 	</div>
 	<div id="wrapper">
@@ -38,71 +41,95 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		
-		<hr />
-		
-		<div class="form">
 			<div class="section">
-				<span>Worttrennung</span>
+				<span></span>
+				<div><hr /></div>
+			</div>
+			<div class="section">
+				<span>
+					Worttrennung
+					<div class="tooltip">
+						<a>✱</a>
+						<div>
+							Bindestriche, Kommas und Punkte werden automatisch in das entsprechende Trennungs&shy;zeichen (·) umgewandelt.
+						</div>
+					</div>
+				</span>
 				<div>
 					<div id="hyph-noun" class="split">
-						<div>
+						<div class="insert-field">
 							<div class="section">
-								<input type="text" id="hyph-sg" placeholder="Singular" />
+								<input type="text" id="hyph-sg" class="hyph" placeholder="Singular" />
 							</div>
 						</div>
 						<div>
 							<div class="section">
-								<input type="text" id="hyph-pl" placeholder="Plural" />
+								<input type="text" id="hyph-pl" class="hyph" placeholder="Plural" />
 							</div>
 						</div>
 					</div>
 					<div id="hyph-verb" class="split hidden">
 						<div>
 							<div class="section">
-								<input type="text" id="hyph-inf" placeholder="Infinitiv" />
+								<input type="text" id="hyph-inf" class="hyph" placeholder="Infinitiv" />
 							</div>
 						</div>
 						<div>
 							<div class="section">
-								<input type="text" id="hyph-preterite" placeholder="Präteritum" />
+								<input type="text" id="hyph-preterite" class="hyph" placeholder="Präteritum" />
 							</div>
 						</div>
 						<div>
 							<div class="section">
-								<input type="text" id="hyph-pp" placeholder="Partizip II" />
+								<input type="text" id="hyph-pp" class="hyph" placeholder="Partizip II" />
 							</div>
 						</div>
 					</div>
 					<div id="hyph-adj" class="split hidden">
 						<div>
 							<div class="section">
-								<input type="text" id="hyph-pos" placeholder="Positiv" />
+								<input type="text" id="hyph-pos" class="hyph" placeholder="Positiv" />
 							</div>
 						</div>
 						<div>
 							<div class="section">
-								<input type="text" id="hyph-comp" placeholder="Komparativ" />
+								<input type="text" id="hyph-comp" class="hyph" placeholder="Komparativ" />
 							</div>
 						</div>
 						<div>
 							<div class="section">
-								<input type="text" id="hyph-sup" placeholder="Superlativ" />
+								<input type="text" id="hyph-sup" class="hyph" placeholder="Superlativ" />
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="section">
-				<span>IPA</span>
-				<div><input type="text" id="ipa" /></div>
+				<span>
+					IPA
+					<div class="tooltip">
+						<a>✱</a>
+						<div>
+							Alternative Aussprache&shy;varianten werden durch Kommas oder Semikolons getrennt.
+						</div>
+					</div>
+				</span>
+				<div>
+					<input type="text" id="ipa" placeholder="ˌiːpeːˈʔaː" />
+					<div id="insert-ipa">
+						<a class="fix">ˈ</a><a class="fix">ˌ</a><a class="fix">ː</a><!--
+						--><a>ʔ</a><a>ɡ</a><a>t͡s</a><a>t͡ʃ</a><a>d͡z</a><a>d͡ʒ</a><a>p͡f</a><!--
+						--><a>θ</a><a>ʃ</a><a>ç</a><a>z̥</a><a>ʒ</a><a>ʁ</a><a>m̩</a><a>n̩</a><!--
+						--><a>ŋ̍</a><a>l̩</a><a>i̯</a><a>ɪ</a><a>ɪ̯</a><a>ʏ</a><a>u̯</a><a>ʊ</a><!--
+						--><a>ʊ̯</a><a>ø</a><a>o̯</a><a>ɛ</a><a>œ</a><a>œ̃</a><a>ə</a><a>ɔ</a><!--
+						--><a>ɔ̃</a><a>ɐ</a><a>ɐ̯</a><a>ɑ̃</a>
+					</div>
+				</div>
 			</div>
-		</div>
-		
-		<hr />
-		
-		<div class="form">
+			<div class="section">
+				<span></span>
+				<div><hr /></div>
+			</div>
 			<div id="gender" class="section">
 				<span>Genus</span>
 				<div>
@@ -119,7 +146,15 @@
 				</div>
 			</div>
 			<div id="declension" class="section">
-				<span>Deklination</span>
+				<span>
+					Deklination
+					<div class="tooltip">
+						<a>✱</a>
+						<div>
+							Zusätzliche Formen werden durch Kommas bzw. Semikolons getrennt. Mit Komma separierte Formen werden mit Sternchen (*) versehen, mit Semikolon separierte Formen werden nummeriert.
+						</div>
+					</div>
+				</span>
 				<div class="split">
 					<div>
 						<div class="section">
@@ -152,7 +187,15 @@
 				</div>
 			</div>
 			<div id="conjugation" class="section hidden">
-				<span>Conjugation</span>
+				<span>
+					Conjugation
+					<div class="tooltip">
+						<a>✱</a>
+						<div>
+							Zusätzliche Formen werden durch Kommas oder Semikolons getrennt.
+						</div>
+					</div>
+				</span>
 				<div class="split">
 					<div>
 						<div class="section">
@@ -188,7 +231,15 @@
 				</div>
 			</div>
 			<div id="degree" class="section hidden">
-				<span>Degree</span>
+				<span>
+					Degree
+					<div class="tooltip">
+						<a>✱</a>
+						<div>
+							Zusätzliche Formen werden durch Kommas oder Semikolons getrennt.
+						</div>
+					</div>
+				</span>
 				<div class="split">
 					<div>
 						<div class="section">
@@ -207,11 +258,10 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		
-		<hr />
-		
-		<div class="form">
+			<div class="section">
+				<span></span>
+				<div><hr /></div>
+			</div>
 			<div class="section">
 				<span>Definition</span>
 				<div>
@@ -236,11 +286,10 @@
 					<textarea id="examples" class="large">:[1] </textarea>
 				</div>
 			</div>
-		</div>
-		
-		<hr />
-		
-		<div class="form">
+			<div class="section">
+				<span></span>
+				<div><hr /></div>
+			</div>
 			<div class="section">
 				<span>Referenzen</span>
 				<div>
@@ -251,14 +300,13 @@
 :[*] {{Ref-UniLeipzig}} (Korpusbelege)
 :[1] {{Ref-FreeDictionary}}
 :[1] {{Ref-Duden}}</textarea>
-					<a href="#" target="_blank" id="view-refs" class="ref small">
-						<img src="img/link.svg" height="15" />Alle öffnen
+					<a href="#" target="_blank" id="view-refs" class="ref small" title="Referenz-Links testen">
+						<img src="img/link.svg" height="15" />Alle Links öffnen
 					</a>
 				</div>
 			</div>
 		</div>
 		<hr />
-		<p class="note"><b>Hinweis</b> — Mit Betätigung des unten stehenden Buttons stimmt der Anwender dieser Applikation zu, dass er den generierten Eintrag vor der Veröffentlichung mit höchster Sorgfalt überprüfen und gegebenenfalls ergänzen wird, um etwaige Fehler und Mängel im Eintrag möglichst zu vermeiden.</p>
 		<button type="button" id="generate"><img src="img/go.svg" height="10" /><span>Eintrag generieren</span></button>
 	</div>
 	<script src="js/general.js"></script>

@@ -1,5 +1,11 @@
 "use strict";
 
+// copy to clipboard
+document.getElementById("copy").addEventListener("click", function() {
+	document.getElementById("output").select();
+	document.execCommand("copy");
+});
+
 // show/hide dialog
 function showDialog() {
 	var dialog = document.getElementById("dialog");
@@ -17,7 +23,7 @@ function hideDialog() {
 	}, 400);
 }
 
-function svgDone() {
+function svgAfter() {
 	document.getElementById("dialog-close").addEventListener("click", function() {
 		hideDialog();
 	});
@@ -73,21 +79,20 @@ document.querySelectorAll("#type-noun, #type-verb, #type-adj")
 		});
 	});
 
-// copy to clipboard
-document.getElementById("copy").addEventListener("click", function() {
-	document.getElementById("output").select();
-	document.execCommand("copy");
-});
-
 // auto-convert hyphens
 Array.prototype.forEach.call(
 	document.getElementsByClassName("hyph"),
 	function(element) {
-		element.addEventListener("keyup", function(e) {
-			element.value = element.value.replace(/[-.,]/g, "·");
+		element.addEventListener("keyup", function() {
+			this.value = this.value.replace(/-/g, "·");
 		});
 	}
 );
+
+// auto-convert <g> to proper IPA symbol
+document.getElementById("ipa").addEventListener("keyup", function() {
+	this.value = this.value.replace(/g/g, "ɡ");
+});
 
 // insert IPA into textbox
 document.querySelectorAll("#insert-ipa a").forEach(function(element) {
@@ -111,7 +116,7 @@ document.querySelectorAll("#insert-ipa a").forEach(function(element) {
 });
 
 // generate article
-document.getElementById("generate").addEventListener("click", function() {
+document.getElementById("go").addEventListener("click", function() {
 	function getValue(id) {
 		var value = document.getElementById(id).value.trim();
 		if(["-", "–", "—"].includes(value)) { value = ""; }
@@ -121,9 +126,7 @@ document.getElementById("generate").addEventListener("click", function() {
 	function makeCode(id, param, isNoun) {
 		var data = getValue(id);
 		if(isNoun) {
-			data = data.split(";").map(
-				function(i) { return i.split(","); }
-			);
+			data = data.split(";").map(i => i.split(","));
 			var code = "";
 			for(let i = 0; i < data.length; i++) {
 				for(let j = 0; j < data[i].length; j++) {
@@ -152,11 +155,9 @@ document.getElementById("generate").addEventListener("click", function() {
 	var references = getValue("references");
 	
 	var ipa = getValue("ipa").split(/[,;]/)
-		.map(function(i) {
-			return "{{Lautschrift|" + i.trim() + "}}";
-		}).join(", ");
+		.map(i => "{{Lautschrift|" + i.trim() + "}}").join(", ");
 	
-	var typeHead;
+	var typeHead = "";
 	if(type === "noun") {
 		typeHead = "{{Wortart|Substantiv|Deutsch}}";
 	} else if(type === "verb") {
@@ -176,27 +177,51 @@ document.getElementById("generate").addEventListener("click", function() {
 	}
 	
 	var examples = getValue("examples");
+	var examplesProvided = true;
 	if(/^(?::\[[0-9a-z]\]\s*)*$/.test(examples)) {
 		// add missing examples template
 		examples = examples.replace(
 			/(:\[[0-9a-z]\])/g,
 			"$1 {{Beispiele fehlen|spr=de}}"
 		);
+		examplesProvided = false;
 	}
 	
 	var etymology = getValue("etymology");
 	if(/^(?::(?:\[[0-9a-z]\])?\s*)*$/.test(etymology)) { etymology = ""; }
 	
-	var synonyms = getValue("synonyms");
-	if(/^(?::\[[0-9a-z]\]\s*)*$/.test(synonyms)) { synonyms = ""; }
-	var hyphenation, inflectionTable;
+	var hyphenation = "", inflectionTable = "";
 	if(type === "noun") {
 		var hyphSg = getValue("hyph-sg");
 		var hyphPl = getValue("hyph-pl");
-		
-		hyphenation =
-			(hyphSg ? hyphSg : "{{kSg.}}") + ", " +
-			(hyphPl ? "{{Pl.}} " + hyphPl : "{{kPl.}}");
+		if(hyphSg) {
+			var hyphSg = hyphSg.split(/[,;]/);
+			if(hyphSg.length === 1) {
+				hyphenation += hyphSg[0];
+			} else {
+				hyphenation += hyphSg[0] + ", " + "{{Sg.2}} " + hyphSg[1];
+			}
+		} else {
+			hyphenation += "{{kSg.}}";
+		}
+		hyphenation += ", ";
+		if(hyphPl) {
+			var hyphPl = hyphPl.split(/[,;]/);
+			if(hyphPl.length === 1) {
+				hyphenation += "{{Pl.}} " + hyphPl[0];
+			} else if(hyphPl.length === 2) {
+				hyphenation +=
+					"{{Pl.}} " + hyphPl[0] + ", " +
+					"{{Pl.2}} " + hyphPl[1];
+			} else {
+				hyphenation +=
+					"{{Pl.}} " + hyphPl[0] + ", " +
+					"{{Pl.2}} " + hyphPl[1] + ", " +
+					"{{Pl.3}} " + hyphPl[2];
+			}
+		} else {
+			hyphenation += "{{kPl.}}";
+		}
 		
 		var genders = [];
 		document.querySelectorAll("input[name='gender']")
@@ -255,7 +280,6 @@ document.getElementById("generate").addEventListener("click", function() {
 		var hyphPos = getValue("hyph-pos");
 		var hyphComp = getValue("hyph-comp");
 		var hyphSup = getValue("hyph-sup");
-		
 		hyphenation =
 			(!hyphPos && !hyphComp && hyphSup ? hyphSup : hyphPos) + ", " +
 			(hyphComp && hyphSup ?
@@ -285,7 +309,6 @@ document.getElementById("generate").addEventListener("click", function() {
 		":{{Hörbeispiele}} {{Audio|}}\n\n" +
 		"{{Bedeutungen}}\n" + definition + "\n\n" +
 		(etymology ? "{{Herkunft}}\n" + etymology + "\n\n" : "") +
-		(synonyms ? "{{Synonyme}}\n" + synonyms + "\n\n" : "") +
 		"{{Beispiele}}\n" + examples + "\n\n" +
 		"==== {{Übersetzungen}} ====\n" +
 		"{{Ü-Tabelle|Ü-links=\n" +
@@ -294,9 +317,9 @@ document.getElementById("generate").addEventListener("click", function() {
 		"|Ü-rechts=\n" +
 		"*{{it}}: [1] {{Ü|it|}}\n" +
 		"*{{es}}: [1] {{Ü|es|}}\n" +
-		"}}\n\n" +
-		(references ? "{{Referenzen}}\n" + references + "\n\n" : "") +
-		"{{Quellen}}\n";
+		"}}\n" +
+		(references ? "\n{{Referenzen}}\n" + references + "\n" : "") +
+		(examplesProvided ? "\n{{Quellen}}\n" : "");
 	document.getElementById("output").value = output;
 	
 	showDialog();
@@ -315,4 +338,5 @@ document.getElementById("view-refs").addEventListener("click", function() {
 		"?corpusId=deu_newscrawl_2011&word=" + word);
 	window.open("https://de.thefreedictionary.com/" + word);
 	window.open("https://www.duden.de/suchen/dudenonline/" + word);
+	window.open("http://de.pons.eu/deutsche-rechtschreibung/" + word);
 });

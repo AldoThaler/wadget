@@ -24,6 +24,7 @@
 	);
 
 	// convert images to inline SVGs
+	if(typeof svgBefore === "function") { svgBefore(); }
 	var svgCount = 0;
 	var svgList = document.querySelectorAll("img[src$='.svg']");
 	for(let i = 0; i < svgList.length; i++) {
@@ -48,12 +49,8 @@
 					img.parentNode.replaceChild(svg, img);
 					
 					svgCount++;
-					if(
-						svgCount === svgList.length &&
-						typeof svgDone === "function"
-					) {
-						svgDone();
-					}
+					if(svgCount === svgList.length &&
+						typeof svgAfter === "function") { svgAfter(); }
 				}
 			}
 			xhr.open("GET", img.getAttribute("src"));

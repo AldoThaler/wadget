@@ -23,6 +23,10 @@ body {
 	line-height: 1.6;
 }
 
+body.center {
+	position: relative;
+}
+
 #wrapper {
 	margin: 0 auto;
 	min-height: 100vh;
@@ -32,6 +36,15 @@ body {
 
 #wrapper.center {
 	text-align: center;
+}
+
+body.center #wrapper {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin: 0;
+	min-height: auto;
 }
 
 /* --- GENERAL --- */
@@ -68,7 +81,7 @@ a.small {
 	margin: 0 6px;
 	text-decoration: none;
 	border-bottom: 0;
-	font-size: 15px;
+	font-size: 14px;
 	color: #BBBBBB;
 	cursor: pointer;
 	transition: color 200ms;
@@ -90,6 +103,11 @@ a.link button {
 
 p {
 	margin-bottom: 6px;
+}
+
+p.bullet::before {
+	content: "•";
+	margin-right: 12px;
 }
 
 b {
@@ -117,6 +135,20 @@ h2 {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+}
+
+.split {
+	display: flex;
+}
+
+.split > input[type="text"], .split > div {
+	flex: 1;
+	margin-right: 10px;
+}
+
+.split > input[type="text"]:last-child,
+.split > div:last-child {
+	margin-right: 0;
 }
 
 .brand {
@@ -202,16 +234,17 @@ h2 {
 }
 
 /* --- TEXTBOXES & TEXTAREAS --- */
-::-webkit-input-placeholder { font-size: 14px; color: #C5C5C5; }
-:-moz-placeholder { font-size: 14px; color: #C5C5C5; }
-::-moz-placeholder { font-size: 14px; color: #C5C5C5; }
-:-ms-input-placeholder { font-size: 14px; color: #C5C5C5; }
-::-ms-input-placeholder { font-size: 14px; color: #C5C5C5; }
-::placeholder { font-size: 14px; color: #C5C5C5; }
+::-webkit-input-placeholder { font-size: 14px; color: #B5B5B5; }
+:-moz-placeholder { font-size: 14px; color: #B5B5B5; }
+::-moz-placeholder { font-size: 14px; color: #B5B5B5; }
+:-ms-input-placeholder { font-size: 14px; color: #B5B5B5; }
+::-ms-input-placeholder { font-size: 14px; color: #B5B5B5; }
+::placeholder { font-size: 14px; color: #B5B5B5; }
 
 input[type="text"], textarea {
 	margin: 6px 0;
 	width: 100%;
+	height: 38px;
 	box-sizing: border-box;
 	border: 1px solid #D5D5D5;
 	border-radius: 10px;
@@ -222,6 +255,35 @@ input[type="text"], textarea {
 	transition: border-color 100ms, box-shadow 200ms;
 	-webkit-appearance: none;
 	appearance: none;
+}
+
+input[type="text"].block {
+	display: block;
+	width: 100%;
+}
+
+input[type="text"]:focus, textarea:focus {
+	border-color: #888888;
+	box-shadow: 0 0 0 4px rgba(90, 90, 90, 0.1);
+}
+
+.input-icon {
+	position: relative;
+}
+
+.input-icon input[type="text"] {
+	padding-right: 40px;
+}
+
+.input-icon a {
+	position: absolute;
+	top: 0;
+	right: 0;
+	display: inline-block;
+	width: 30px;
+	height: 100%;
+	box-sizing: border-box;
+	padding: 12px 6px;
 }
 
 textarea {
@@ -237,22 +299,12 @@ textarea.large {
 }
 
 #output {
-	height: 450px;
-}
-
-input[type="text"].block {
-	display: block;
-	width: 100%;
-}
-
-input[type="text"]:focus, textarea:focus {
-	border-color: #888888;
-	box-shadow: 0 0 0 4px rgba(90, 90, 90, 0.1);
-}
-
-#result {
 	resize: none;
-	height: 350px;
+	height: 50vh;
+}
+
+#output.small {
+	height: 200px;
 }
 
 /* --- BUTTONS --- */
@@ -583,21 +635,7 @@ button span {
 	display: table-cell;
 }
 
-.form .split {
-	display: flex;
-}
-
-.form .split > div {
-	flex: 1;
-	margin-right: 10px;
-	vertical-align: top;
-}
-
-.form .split > div:last-child {
-	margin-right: 0;
-}
-
-/* --- IPA FIELD --- */
+/* --- INSERT IPA CHARACTERS --- */
 #ipa {
 	margin-bottom: 0;
 	border-radius: 10px 10px 0 0;
@@ -722,29 +760,38 @@ button span {
 /* --- RESPONSIVE --- */
 @media (min-width: 1401px) {
 	#wrapper { width: 50%; }
+	#wrapper.small { width: 40%; }
 	#dialog > div { width: 35%; }
 }
 
 @media (max-width: 1400px) {
 	#wrapper { width: 60%; }
+	#wrapper.small { width: 50%; }
 	#dialog > div { width: 45%; }
 }
 
 @media (max-width: 1150px) {
 	#wrapper { width: 80%; }
+	#wrapper.small { width: 60%; }
 	#dialog > div { width: 60%; }
 }
 
 @media (max-width: 850px) {
-	#wrapper { width: 100%; }
+	#wrapper { width: 90%; }
+	#wrapper.small { width: 75%; }
 	#dialog > div { width: 80%; }
+}
+
+@media (max-width: 500px) {
+	#wrapper { width: 100%; }
+	#wrapper.small { width: 90%; }
 }
 
 @media (max-width: 750px) {
 	.form, .form > .section { display: block; }
 	.form > .section > span { text-align: left; }
-	.form .split { display: block; }
-	.form .split > div { margin-right: 0; }
+	.split { display: block; }
+	.split > div { margin-right: 0; }
 	
 	.tooltip div {
 		top: 45px;

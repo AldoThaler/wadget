@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Wadget Web</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="css/styles.css" />
+	<link rel="icon" href="favicon.png" type="image/x-icon" />
+</head>
+<body class="center">
+	<div id="wrapper" class="center small">
+		<div id="header"><a href="/wadget/"><span>W</span><span>adget</span><span>Online-Version</span></a></div>
+		<div class="split">
+			<div class="input-icon">
+				<input type="text" id="query" placeholder="Suchbegriff…" />
+				<a id="go" class="small"><img src="img/search.svg" height="18" /></a>
+			</div>
+			<input type="text" id="url" placeholder="URL des Werks…" />
+		</div>
+		<textarea id="output" class="small" placeholder="Ausgabe…"></textarea>
+		<a href="#" id="copy" class="small" title="In die Zwischenablage kopieren"><img src="img/clipboard.svg" height="18" />Kopieren</a>
+	</div>
+	<script src="js/general.js"></script>
+	<script src="js/web.js"></script>
+</body>
+</html>

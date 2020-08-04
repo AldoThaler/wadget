@@ -79,12 +79,12 @@ document.querySelectorAll("#type-noun, #type-verb, #type-adj")
 		});
 	});
 
-// auto-convert hyphens
+// auto-convert dots
 Array.prototype.forEach.call(
 	document.getElementsByClassName("hyph"),
 	function(element) {
 		element.addEventListener("keyup", function() {
-			this.value = this.value.replace(/-/g, "·");
+			this.value = this.value.replace(/\./g, "·");
 		});
 	}
 );
@@ -177,14 +177,12 @@ document.getElementById("go").addEventListener("click", function() {
 	}
 	
 	var examples = getValue("examples");
-	var examplesProvided = true;
 	if(/^(?::\[[0-9a-z]\]\s*)*$/.test(examples)) {
 		// add missing examples template
 		examples = examples.replace(
 			/(:\[[0-9a-z]\])/g,
 			"$1 {{Beispiele fehlen|spr=de}}"
 		);
-		examplesProvided = false;
 	}
 	
 	var etymology = getValue("etymology");
@@ -319,24 +317,44 @@ document.getElementById("go").addEventListener("click", function() {
 		"*{{es}}: [1] {{Ü|es|}}\n" +
 		"}}\n" +
 		(references ? "\n{{Referenzen}}\n" + references + "\n" : "") +
-		(examplesProvided ? "\n{{Quellen}}\n" : "");
+		(examples.includes("<ref>") ? "\n{{Quellen}}\n" : "");
 	document.getElementById("output").value = output;
 	
 	showDialog();
 });
 
-// view references
-document.getElementById("view-refs").addEventListener("click", function() {
-	var word = document.getElementById("word").value.trim();
-	
-	window.open("https://de.wikipedia.org/wiki/" + word);
-	window.open("https://de.wikipedia.org/w/index.php" +
-		"?title=Special%3ASearch&profile=default&search=" + word);
-	window.open("https://www.dwds.de/?q=" + word);
-	window.open("http://www.owid.de/suche/wort?wort=" + word);
-	window.open("https://corpora.uni-leipzig.de/de/res" +
-		"?corpusId=deu_newscrawl_2011&word=" + word);
-	window.open("https://de.thefreedictionary.com/" + word);
-	window.open("https://www.duden.de/suchen/dudenonline/" + word);
-	window.open("http://de.pons.eu/deutsche-rechtschreibung/" + word);
+// reference links
+document.querySelectorAll("#ref-links a").forEach(function(element) {
+	element.target = "_blank";
+	element.title = "Link testen";
+})
+
+document.getElementById("word").addEventListener("input", function() {
+	var word = this.value.trim();
+	// Wikipedia article
+	document.getElementById("ref-wp").href =
+		"https://de.wikipedia.org/wiki/" + word;
+	// Wikipedia search
+	document.getElementById("ref-wps").href =
+		"https://de.wikipedia.org/w/index.php" +
+		"?title=Special%3ASearch&profile=default&search=" + word;
+	// DWDS
+	document.getElementById("ref-dwds").href =
+		"https://www.dwds.de/?q=" + word;
+	// OWID
+	document.getElementById("ref-owid").href =
+		"http://www.owid.de/suche/wort?wort=" + word;
+	// UniLeipzig
+	document.getElementById("ref-ul").href =
+		"https://corpora.uni-leipzig.de/de/res" +
+		"?corpusId=deu_newscrawl_2011&word=" + word;
+	// FreeDictionary
+	document.getElementById("ref-fd").href =
+		"https://de.thefreedictionary.com/" + word;
+	// Duden
+	document.getElementById("ref-duden").href =
+		"https://www.duden.de/suchen/dudenonline/" + word;
+	// PONS
+	document.getElementById("ref-pons").href =
+		"http://de.pons.eu/deutsche-rechtschreibung/" + word;
 });

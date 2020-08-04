@@ -196,6 +196,16 @@ h2 {
 	color: #BBBBBB;
 }
 
+#ref-links {
+	margin-top: 10px;
+	columns: 3;
+}
+
+#ref-links a {
+	display: block;
+	margin: 6px;
+}
+
 /* --- HEADER --- */
 #header {
 	margin-bottom: 50px;
@@ -815,6 +825,10 @@ button span {
 	}
 }
 
+@media (max-width: 650px) {
+	#ref-links { columns: 2; }
+}
+
 @media (max-width: 500px) {
 	#dialog {
 		align-items: flex-end;
@@ -825,4 +839,8 @@ button span {
 		width: 100%;
 		height: 100%;
 	}
+}
+
+@media (max-width: 400px) {
+	#ref-links { columns: 1; }
 }

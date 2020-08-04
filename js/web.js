@@ -160,9 +160,11 @@
 				}
 				
 				// --- PAGE NUMBER --- //
-				var pageUrl = urlObj.searchParams.get("pg") || "xxx";
-				var pageNum = (pageUrl.match(/(?:PA|PT|PP|PG)[0-9]+/) || ["xxx"])[0];
-				output.value = "„xxx“" +
+				var pageUrl = urlObj.searchParams.get("pg");
+				var pageNum = pageUrl.match(/(?:PA|PT|PP|PG)([0-9]+)/);
+				pageNum = (pageNum ? pageNum[1] : "xxx");
+				output.value =
+					"„xxx“" +
 					"<ref>{{Literatur" +
 					(author ? "|Autor=" + author : "") +
 					"|Titel=" + title +
@@ -351,7 +353,9 @@
 								author = getText(html.querySelector(
 									"meta[name='author']"
 								), true);
-								if(author === "Der Spiegel") { author = ""; }
+								
+								if(author.startsWith("DER SPIEGEL")) { author = ""; }
+								if(author === "Süddeutsche Zeitung") { author = ""; }
 							}
 							break;
 						case "Stern":

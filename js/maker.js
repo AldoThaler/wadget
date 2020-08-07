@@ -53,6 +53,12 @@ document.querySelectorAll("#type-noun, #type-verb, #type-adj")
 				hyphNoun.classList.remove("hidden");
 				hyphVerb.classList.add("hidden");
 				hyphAdj.classList.add("hidden");
+				
+				// show etymology template
+				document.getElementById("etymology").value =
+					":[[Determinativkompositum]] aus den Substantiven " +
+					"''[[xxx]]'' und ''[[xxx]]'' sowie dem " +
+					"[[Fugenelement]] ''[[-xxx]]''";
 			} else if(element.id === "type-verb") {
 				// show conjugation
 				conjugation.classList.remove("hidden");
@@ -64,6 +70,12 @@ document.querySelectorAll("#type-noun, #type-verb, #type-adj")
 				hyphVerb.classList.remove("hidden");
 				hyphNoun.classList.add("hidden");
 				hyphAdj.classList.add("hidden");
+				
+				// show etymology template
+				document.getElementById("etymology").value =
+					":[[Derivation]] ([[Ableitung]]) des Verbs " +
+					"''[[xxx]]'' mit dem [[Präfix]] " +
+					"([[Derivatem]]) ''[[xxx-]]''";
 			} else {
 				// show degree
 				degree.classList.remove("hidden");
@@ -75,6 +87,12 @@ document.querySelectorAll("#type-noun, #type-verb, #type-adj")
 				hyphAdj.classList.remove("hidden");
 				hyphNoun.classList.add("hidden");
 				hyphVerb.classList.add("hidden");
+				
+				// show etymology template
+				document.getElementById("etymology").value =
+					":[[Derivation]] ([[Ableitung]]) zum Substantiv " +
+					"''[[xxx]]'' mit dem [[Derivatem]] " +
+					"([[Ableitungsmorphem]]) ''[[-xxx]]''";
 			}
 		});
 	});
@@ -84,14 +102,22 @@ Array.prototype.forEach.call(
 	document.getElementsByClassName("hyph"),
 	function(element) {
 		element.addEventListener("keyup", function() {
+			var start = this.selectionStart;
 			this.value = this.value.replace(/\./g, "·");
+			this.selectionStart = start;
+			this.selectionEnd = start;
+			this.focus();
 		});
 	}
 );
 
 // auto-convert <g> to proper IPA symbol
 document.getElementById("ipa").addEventListener("keyup", function() {
+	var start = this.selectionStart;
 	this.value = this.value.replace(/g/g, "ɡ");
+	this.selectionStart = start;
+	this.selectionEnd = start;
+	this.focus();
 });
 
 // insert IPA into textbox
@@ -171,25 +197,26 @@ document.getElementById("go").addEventListener("click", function() {
 	if(/^(?::\[[0-9a-z]\]\s*)*$/.test(definition)) {
 		// add missing definition template
 		definition = definition.replace(
-			/(:\[[0-9a-z]\])/g,
-			"$1 {{QS Bedeutungen|fehlend|spr=de}}"
+			/^:\[[0-9a-z]+\]/gm,
+			"$& {{QS Bedeutungen|fehlend|spr=de}}"
 		);
 	}
 	
 	var examples = getValue("examples");
-	if(/^(?::\[[0-9a-z]\]\s*)*$/.test(examples)) {
+	if(/^(?::\[[0-9a-z]+\]\s*)*$/.test(examples)) {
 		// add missing examples template
 		examples = examples.replace(
-			/(:\[[0-9a-z]\])/g,
-			"$1 {{Beispiele fehlen|spr=de}}"
+			/^:\[[0-9a-z]+\]/gm,
+			"$& {{Beispiele fehlen|spr=de}}"
 		);
 	}
 	
 	var etymology = getValue("etymology");
-	if(/^(?::(?:\[[0-9a-z]\])?\s*)*$/.test(etymology)) { etymology = ""; }
+	if(/^(?::(?:\[[0-9a-z]+\])?\s*)*$/.test(etymology)) { etymology = ""; }
 	
 	var hyphenation = "", inflectionTable = "";
 	if(type === "noun") {
+		// hyphenation
 		var hyphSg = getValue("hyph-sg");
 		var hyphPl = getValue("hyph-pl");
 		if(hyphSg) {
@@ -221,6 +248,7 @@ document.getElementById("go").addEventListener("click", function() {
 			hyphenation += "{{kPl.}}";
 		}
 		
+		// gender
 		var genders = [];
 		document.querySelectorAll("input[name='gender']")
 			.forEach(function(element) {
@@ -228,15 +256,17 @@ document.getElementById("go").addEventListener("click", function() {
 					genders.push(element.value);
 				}
 			});
-		var gender = "", genderHead = "";
+		
+		var gender = "";
 		for(let i = 0; i < genders.length; i++) {
 			gender += "|Genus" + (genders.length > 1 ?
 				" " + (i + 1) : "") + "=" + genders[i] + "\n";
-			genderHead += "{{" + genders[i] + "}}" +
-				(i < genders.length - 1 ? ", " : "");
 		}
-		if(!gender || !genderHead) { return false; }
+		if(!gender) { return false; }
+		var genderHead = genders.join("");
+		genderHead = "{{" + (genderHead === "mn" ? "mn." : genderHead) + "}}";
 		
+		// inflection table
 		var nomSg = makeCode("nom-sg", "Nominativ Singular", true);
 		var genSg = makeCode("gen-sg", "Genitiv Singular", true);
 		var datSg = makeCode("dat-sg", "Dativ Singular", true);
@@ -251,6 +281,7 @@ document.getElementById("go").addEventListener("click", function() {
 			gender + nomSg + genSg + datSg + accSg +
 			nomPl + genPl + datPl + accPl + "}}";
 	} else if(type === "verb") {
+		// hyphenation
 		var hyphInf = getValue("hyph-inf");
 		var hyphPret = getValue("hyph-preterite");
 		var hyphPP = getValue("hyph-pp");
@@ -260,6 +291,7 @@ document.getElementById("go").addEventListener("click", function() {
 			", {{Prät.}} " + (hyphPret ? hyphPret : "—") +
 			", {{Part.}} " + (hyphPP ? hyphPP : "—");
 		
+		// inflection table
 		var firstSg = makeCode("first-sg", "Präsens_ich", false);
 		var secondSg = makeCode("second-sg", "Präsens_du", false);
 		var thirdSg = makeCode("third-sg", "Präsens_er, sie, es", false);
@@ -275,6 +307,7 @@ document.getElementById("go").addEventListener("click", function() {
 			firstSg + secondSg + thirdSg + preterite + subj +
 			impSg + impPl + pp + auxVerb + "}}";
 	} else if(type === "adj") {
+		// hyphenation
 		var hyphPos = getValue("hyph-pos");
 		var hyphComp = getValue("hyph-comp");
 		var hyphSup = getValue("hyph-sup");
@@ -286,6 +319,7 @@ document.getElementById("go").addEventListener("click", function() {
 				"{{kSt.}}"
 			);
 		
+		// degree
 		var pos = makeCode("pos", "Positiv", false);
 		var comp = makeCode("comp", "Komparativ", false);
 		var sup = makeCode("sup", "Superlativ", false);
@@ -295,6 +329,7 @@ document.getElementById("go").addEventListener("click", function() {
 			pos + comp + sup + "}}";
 	}
 	
+	// make entry
 	var output =
 		"== " + word + " ({{Sprache|Deutsch}}) ==\n" +
 		"=== " + typeHead + (type === "noun" ?
@@ -324,37 +359,52 @@ document.getElementById("go").addEventListener("click", function() {
 });
 
 // reference links
-document.querySelectorAll("#ref-links a").forEach(function(element) {
-	element.target = "_blank";
-	element.title = "Link testen";
-})
+var refWP = document.getElementById("ref-wp");
+var refWPS = document.getElementById("ref-wps");
+var refDWDS = document.getElementById("ref-dwds");
+var refOWID = document.getElementById("ref-owid");
+var refUL = document.getElementById("ref-ul");
+var refFD = document.getElementById("ref-fd");
+var refDuden = document.getElementById("ref-duden");
+var refPONS = document.getElementById("ref-pons");
 
+setRefs("Wort");
 document.getElementById("word").addEventListener("input", function() {
-	var word = this.value.trim();
+	// update links while typing
+	setRefs(this.value.trim());
+});
+
+function setRefs(word) {
 	// Wikipedia article
-	document.getElementById("ref-wp").href =
-		"https://de.wikipedia.org/wiki/" + word;
+	refWP.href = "https://de.wikipedia.org/wiki/" + word;
 	// Wikipedia search
-	document.getElementById("ref-wps").href =
-		"https://de.wikipedia.org/w/index.php" +
+	refWPS.href = "https://de.wikipedia.org/w/index.php" +
 		"?title=Special%3ASearch&profile=default&search=" + word;
 	// DWDS
-	document.getElementById("ref-dwds").href =
-		"https://www.dwds.de/?q=" + word;
+	refDWDS.href = "https://www.dwds.de/?q=" + word;
 	// OWID
-	document.getElementById("ref-owid").href =
-		"http://www.owid.de/suche/wort?wort=" + word;
+	refOWID .href = "http://www.owid.de/suche/wort?wort=" + word;
 	// UniLeipzig
-	document.getElementById("ref-ul").href =
-		"https://corpora.uni-leipzig.de/de/res" +
+	refUL.href = "https://corpora.uni-leipzig.de/de/res" + 
 		"?corpusId=deu_newscrawl_2011&word=" + word;
 	// FreeDictionary
-	document.getElementById("ref-fd").href =
-		"https://de.thefreedictionary.com/" + word;
+	refFD.href = "https://de.thefreedictionary.com/" + word;
 	// Duden
-	document.getElementById("ref-duden").href =
-		"https://www.duden.de/suchen/dudenonline/" + word;
+	refDuden.href = "https://www.duden.de/suchen/dudenonline/" + word;
 	// PONS
-	document.getElementById("ref-pons").href =
-		"http://de.pons.eu/deutsche-rechtschreibung/" + word;
-});
+	refPONS.href = "http://de.pons.eu/deutsche-rechtschreibung/" + word;
+}
+
+// open all links
+document.getElementById("ref-open-all")
+	.addEventListener("click", function() {
+		window.open(refWP.href, "_blank");
+		window.open(refWPS.href, "_blank");
+		window.open(refDWDS.href, "_blank");
+		window.open(refOWID.href, "_blank");
+		window.open(refUL.href, "_blank");
+		window.open(refFD.href, "_blank");
+		window.open(refDuden.href, "_blank");
+		window.open(refPONS.href, "_blank");
+	}
+);

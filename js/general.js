@@ -24,7 +24,6 @@
 	);
 
 	// convert images to inline SVGs
-	if(typeof svgBefore === "function") { svgBefore(); }
 	var svgCount = 0;
 	var svgList = document.querySelectorAll("img[src$='.svg']");
 	for(let i = 0; i < svgList.length; i++) {

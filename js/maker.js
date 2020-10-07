@@ -30,7 +30,7 @@ function svgAfter() {
 }
 
 // show/hide input fields accordingly
-document.querySelectorAll("#type-noun, #type-verb, #type-adj")
+document.querySelectorAll("#type-noun, #type-verb, #type-adj, #type-adv")
 	.forEach(function(element) {
 		element.addEventListener("change", function() {
 			var declension = document.getElementById("declension");
@@ -41,6 +41,7 @@ document.querySelectorAll("#type-noun, #type-verb, #type-adj")
 			var hyphNoun = document.getElementById("hyph-noun");
 			var hyphVerb = document.getElementById("hyph-verb");
 			var hyphAdj = document.getElementById("hyph-adj");
+			var hyphAdv = document.getElementById("hyph-adv");
 			
 			if(element.id === "type-noun") {
 				// show declension
@@ -53,12 +54,16 @@ document.querySelectorAll("#type-noun, #type-verb, #type-adj")
 				hyphNoun.classList.remove("hidden");
 				hyphVerb.classList.add("hidden");
 				hyphAdj.classList.add("hidden");
+				hyphAdv.classList.add("hidden");
 				
 				// show etymology template
 				document.getElementById("etymology").value =
 					":[[Determinativkompositum]] aus den Substantiven " +
 					"''[[xxx]]'' und ''[[xxx]]'' sowie dem " +
-					"[[Fugenelement]] ''[[-xxx]]''";
+					"[[Fugenelement]] ''[[-xxx]]''\n\n" +
+					":[[Ableitung]] des Adjektivs ''[[xxx]]'' " +
+					"zum Substantiv mit dem [[Derivatem]] " +
+					"([[Ableitungsmorphem]]) ''[[-xxx]]''";
 			} else if(element.id === "type-verb") {
 				// show conjugation
 				conjugation.classList.remove("hidden");
@@ -70,13 +75,14 @@ document.querySelectorAll("#type-noun, #type-verb, #type-adj")
 				hyphVerb.classList.remove("hidden");
 				hyphNoun.classList.add("hidden");
 				hyphAdj.classList.add("hidden");
+				hyphAdv.classList.add("hidden");
 				
 				// show etymology template
 				document.getElementById("etymology").value =
 					":[[Derivation]] ([[Ableitung]]) des Verbs " +
 					"''[[xxx]]'' mit dem [[Präfix]] " +
 					"([[Derivatem]]) ''[[xxx-]]''";
-			} else {
+			} else if(element.id === "type-adj") {
 				// show degree
 				degree.classList.remove("hidden");
 				declension.classList.add("hidden");
@@ -87,12 +93,29 @@ document.querySelectorAll("#type-noun, #type-verb, #type-adj")
 				hyphAdj.classList.remove("hidden");
 				hyphNoun.classList.add("hidden");
 				hyphVerb.classList.add("hidden");
+				hyphAdv.classList.add("hidden");
 				
 				// show etymology template
 				document.getElementById("etymology").value =
 					":[[Derivation]] ([[Ableitung]]) zum Substantiv " +
 					"''[[xxx]]'' mit dem [[Derivatem]] " +
 					"([[Ableitungsmorphem]]) ''[[-xxx]]''";
+			} else if(element.id === "type-adv") {
+				// hide inflection
+				declension.classList.add("hidden");
+				gender.classList.add("hidden");
+				conjugation.classList.add("hidden");
+				degree.classList.add("hidden");
+				
+				// show hyphenation for adverbs
+				hyphAdv.classList.remove("hidden");
+				hyphNoun.classList.add("hidden");
+				hyphVerb.classList.add("hidden");
+				hyphAdj.classList.add("hidden");
+				
+				// show etymology template
+				document.getElementById("etymology").value =
+					":[[Ableitung]] zum Adjektiv ''[[xxx]]'' mit dem [[Derivatem]] ([[Ableitungsmorphem]]) ''[[-xxx]]'' sowie dem [[Fugenelement]] ''[[-xxx]]''";
 			}
 		});
 	});
@@ -188,10 +211,11 @@ document.getElementById("go").addEventListener("click", function() {
 		typeHead = "{{Wortart|Substantiv|Deutsch}}";
 	} else if(type === "verb") {
 		typeHead = "{{Wortart|Verb|Deutsch}}"
-	} else {
+	} else if(type === "adj") {
 		typeHead = "{{Wortart|Adjektiv|Deutsch}}";
+	} else if(type === "adv") {
+		typeHead = "{{Wortart|Adverb|Deutsch}}";
 	}
-	
 	
 	var definition = getValue("definition");
 	if(/^(?::\[[0-9a-z]\]\s*)*$/.test(definition)) {
@@ -202,6 +226,11 @@ document.getElementById("go").addEventListener("click", function() {
 		);
 	}
 	
+	var etymology = getValue("etymology");
+	
+	var synonyms = getValue("synonyms");
+	if(/^(?::(?:\[[0-9a-z]+\])?\s*)*$/.test(synonyms)) { synonyms = ""; }
+	
 	var examples = getValue("examples");
 	if(/^(?::\[[0-9a-z]+\]\s*)*$/.test(examples)) {
 		// add missing examples template
@@ -210,9 +239,6 @@ document.getElementById("go").addEventListener("click", function() {
 			"$& {{Beispiele fehlen|spr=de}}"
 		);
 	}
-	
-	var etymology = getValue("etymology");
-	if(/^(?::(?:\[[0-9a-z]+\])?\s*)*$/.test(etymology)) { etymology = ""; }
 	
 	var hyphenation = "", inflectionTable = "";
 	if(type === "noun") {
@@ -314,7 +340,7 @@ document.getElementById("go").addEventListener("click", function() {
 		hyphenation =
 			(!hyphPos && !hyphComp && hyphSup ? hyphSup : hyphPos) + ", " +
 			(hyphComp && hyphSup ?
-				"{{Komp.}} " + hyphComp +
+				"{{Komp.}} " + hyphComp + ", " +
 				"{{Sup.}} am " + hyphSup :
 				"{{kSt.}}"
 			);
@@ -327,6 +353,8 @@ document.getElementById("go").addEventListener("click", function() {
 		inflectionTable =
 			"{{Deutsch Adjektiv Übersicht\n" +
 			pos + comp + sup + "}}";
+	} else if(type === "adv") {
+		hyphenation = getValue("hyph-adv-lemma");
 	}
 	
 	// make entry
@@ -334,7 +362,7 @@ document.getElementById("go").addEventListener("click", function() {
 		"== " + word + " ({{Sprache|Deutsch}}) ==\n" +
 		"=== " + typeHead + (type === "noun" ?
 			", " + genderHead : "") + " ===\n\n" +
-		inflectionTable + "\n\n" +
+		(inflectionTable ? inflectionTable + "\n\n" : "") +
 		"{{Worttrennung}}\n" +
 		":" + hyphenation + "\n\n" +
 		"{{Aussprache}}\n" +
@@ -342,6 +370,7 @@ document.getElementById("go").addEventListener("click", function() {
 		":{{Hörbeispiele}} {{Audio|}}\n\n" +
 		"{{Bedeutungen}}\n" + definition + "\n\n" +
 		(etymology ? "{{Herkunft}}\n" + etymology + "\n\n" : "") +
+		(synonyms ? "{{Synonyme}}\n" + synonyms + "\n\n" : "") +
 		"{{Beispiele}}\n" + examples + "\n\n" +
 		"==== {{Übersetzungen}} ====\n" +
 		"{{Ü-Tabelle|Ü-links=\n" +
